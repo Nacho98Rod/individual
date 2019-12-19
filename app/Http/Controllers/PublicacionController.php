@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DB;
 use App\Publicacion;
 
 use Illuminate\Http\Request;
@@ -15,7 +16,8 @@ class PublicacionController extends Controller
      */
     public function index()
     {
-        $publicaciones = Publicacion::all();
+        $publicaciones = DB::table('publicaciones')->paginate(5);
+        
         return view('inicio', compact('publicaciones'));
     }
 
@@ -28,10 +30,27 @@ class PublicacionController extends Controller
      */
     public function store(Request $request)
     {
+        $reglas = [
+            'titulo' => 'string|unique:publicaciones,titulo',   
+            'posteo' => 'string|min:3|max:500',
+            'imagen' => 'image'
+        ];
+
+        $mensajes = [
+            'string' => 'El campo :attribute tiene que ser un texto',
+            'min' => 'El campo :attribute tiene un minimo de :min',
+            'max' => 'El campo :attribute tiene un maximo de :max',
+            'image' => 'El campo :attribute debe ser una imagen',
+            'unique' => 'El campo :attribute esta repetido'
+        ];
+
+        $this->validate($request, $reglas, $mensajes);
+
         $publicacion = new Publicacion;
-        $ruta = $request->file('imagen')->store('public');
-        $nombreArchivo = basename($ruta);
-        $publicacion->imagen = $nombreArchivo;
+        $path = $request->file('imagen')->store('public');
+        $nombreImagen = basename($path);
+        $publicacion->imagen = $nombreImagen;
+        $publicacion->titulo = $request->titulo;
         $publicacion->posteo = $request->posteo;
         $publicacion->save();
 

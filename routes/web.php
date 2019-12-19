@@ -21,7 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/inicio', 'PublicacionController@index')->name('inicio');
 
-Route::post('/inicio', 'PublicacionController@store')->middleware('auth')->name('publicar');
+Route::post('/inicio', 'PublicacionController@store')->middleware('admin')->name('publicar');
 
 Route::get('/detalle/{id}', 'PublicacionController@show')->name('mostrar');
 
