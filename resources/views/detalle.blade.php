@@ -14,7 +14,7 @@ Publicacion
 
     <p>{{$publicacion->updated_at}}</p>
 
-    <img class="img-fluid rounded" src="/storage/{{$publicacion->imagen}}" alt="imagen de noticia">
+    <img class="img-fluid rounded" src="/storage/{{$publicacion->imagen}}" alt="Imagen de noticia">
     
     <hr>
 

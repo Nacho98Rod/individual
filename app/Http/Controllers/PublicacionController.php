@@ -31,15 +31,16 @@ class PublicacionController extends Controller
     public function store(Request $request)
     {
         $reglas = [
-            'titulo' => 'string|unique:publicaciones,titulo',   
-            'posteo' => 'string|min:3|max:500',
+            'titulo' => 'string|required|unique:publicaciones,titulo',   
+            'posteo' => 'string|required|min:3|max:3000',
             'imagen' => 'image'
         ];
 
         $mensajes = [
+            'required' => 'El campo :attribute es requerido',
             'string' => 'El campo :attribute tiene que ser un texto',
-            'min' => 'El campo :attribute tiene un minimo de :min',
-            'max' => 'El campo :attribute tiene un maximo de :max',
+            'min' => 'El campo :attribute tiene un minimo de :min caracteres',
+            'max' => 'El campo :attribute tiene un maximo de :max caracteres',
             'image' => 'El campo :attribute debe ser una imagen',
             'unique' => 'El campo :attribute esta repetido'
         ];
@@ -47,12 +48,18 @@ class PublicacionController extends Controller
         $this->validate($request, $reglas, $mensajes);
 
         $publicacion = new Publicacion;
+        if($request->file('imagen') == null){
+            $publicacion->titulo = $request->titulo;
+            $publicacion->posteo = $request->posteo;
+            $publicacion->save();
+        }else{
         $path = $request->file('imagen')->store('public');
         $nombreImagen = basename($path);
         $publicacion->imagen = $nombreImagen;
         $publicacion->titulo = $request->titulo;
         $publicacion->posteo = $request->posteo;
         $publicacion->save();
+        }
 
         return redirect('/inicio');
     }
@@ -92,15 +99,16 @@ class PublicacionController extends Controller
     {
 
         $reglas = [
-            'titulo' => 'string|unique:publicaciones,titulo',   
-            'posteo' => 'string|min:3|max:500',
+            'titulo' => 'string|required|unique:publicaciones,titulo',   
+            'posteo' => 'string|required|min:3|max:3000',
             'imagen' => 'image'
         ];
 
         $mensajes = [
+            'required' => 'El campo :attribute es requerido',
             'string' => 'El campo :attribute tiene que ser un texto',
-            'min' => 'El campo :attribute tiene un minimo de :min',
-            'max' => 'El campo :attribute tiene un maximo de :max',
+            'min' => 'El campo :attribute tiene un minimo de :min caracteres',
+            'max' => 'El campo :attribute tiene un maximo de :max caracteres',
             'image' => 'El campo :attribute debe ser una imagen',
             'unique' => 'El campo :attribute esta repetido'
         ];
@@ -108,12 +116,18 @@ class PublicacionController extends Controller
         $this->validate($request, $reglas, $mensajes);
 
         $publicacion = Publicacion::findOrFail($request->id);
+        if($request->file('imagen') == null){
+            $publicacion->titulo = $request->titulo;
+            $publicacion->posteo = $request->posteo;
+            $publicacion->save();
+        }else{
         $path = $request->file('imagen')->store('public');
         $nombreImagen = basename($path);
         $publicacion->imagen = $nombreImagen;
         $publicacion->titulo = $request->titulo;
         $publicacion->posteo = $request->posteo;
         $publicacion->save();
+        }
 
         return redirect('inicio');
     }
