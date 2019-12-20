@@ -15,6 +15,11 @@
                     @endif
 
                     Estas adentro!! :D
+                    
+                    <br>
+                    <hr>
+                    <a href="{{route('inicio')}}"><button type="button" class="btn btn-primary">Gracias</button></a>
+
                 </div>
             </div>
         </div>
