@@ -36,15 +36,24 @@ class ComentarioController extends Controller
      */
     public function store(Request $request)
     {
+        
+        $regla = [
+            'comentario' => 'string|required'
+        ];
+     
+        $mensaje = [
+            'string' => 'El campo :attribute tiene que ser un texto',
+            'required' => 'El campo :attribute es requerido'
+        ];
+        
+        $this->validate($request, $regla, $mensaje);
         $comentario = new Comentario;
-
+        $comentario->id_usuario = $request->id_usuario;
         $comentario->comentario = $request->comentario;
-
-        $comentario->id_publicacion = $request->id;
-
+        $comentario->id_posteo = $request->id_publicacion;
         $comentario->save();
 
-        return view('inicio');
+        return redirect()->route('mostrar', ['id' => $request->id_publicacion]); 
     }
 
     /**
@@ -85,17 +94,5 @@ class ComentarioController extends Controller
         $comentario->name = 'comentario';
 
         $comentario->save();
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        Comentario::destroy($id);
-        return view('welcome');
     }
 }

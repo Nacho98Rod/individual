@@ -26,3 +26,9 @@ Route::post('/inicio', 'PublicacionController@store')->middleware('admin')->name
 Route::get('/detalle/{id}', 'PublicacionController@show')->name('mostrar');
 
 Route::post('/detalle', 'ComentarioController@store')->middleware('auth')->name('comentar');
+
+Route::get('/publicacion/editar/{id}', 'PublicacionController@edit')->middleware('admin');
+
+Route::post('/publicacion/editar', 'PublicacionController@update')->middleware('admin')->name('editar');
+
+Route::get('/publicacion/eliminar/{id}', 'PublicacionController@destroy')->middleware('admin')->name('eliminar');

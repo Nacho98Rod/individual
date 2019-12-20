@@ -10,6 +10,10 @@ class Publicacion extends Model
     public $guarded = [];
 
     public function comentar(){
-        return $this->hasMany(Comentario::class, 'id_publicacion');
+        return $this->hasMany(Comentario::class, 'id_posteo');
+    }
+
+    public function usuario(){
+        return $this->belongsTo(User::class, 'id_user');
     }
 }

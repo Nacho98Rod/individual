@@ -77,8 +77,8 @@ class PublicacionController extends Controller
      */
     public function edit($id)
     {
-        $publicaciones = Publicacion::find($id);
-        return view('');
+        $publicacion = Publicacion::findOrFail($id);
+        return view('editar', compact('publicacion'));
     }
 
     /**
@@ -88,13 +88,34 @@ class PublicacionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Publicacion $publicacion)
+    public function update(Request $request)
     {
-        $publicacion = Publicacion::find($request);
 
-        $publicacion->name = 'posteo';
+        $reglas = [
+            'titulo' => 'string|unique:publicaciones,titulo',   
+            'posteo' => 'string|min:3|max:500',
+            'imagen' => 'image'
+        ];
 
+        $mensajes = [
+            'string' => 'El campo :attribute tiene que ser un texto',
+            'min' => 'El campo :attribute tiene un minimo de :min',
+            'max' => 'El campo :attribute tiene un maximo de :max',
+            'image' => 'El campo :attribute debe ser una imagen',
+            'unique' => 'El campo :attribute esta repetido'
+        ];
+
+        $this->validate($request, $reglas, $mensajes);
+
+        $publicacion = Publicacion::findOrFail($request->id);
+        $path = $request->file('imagen')->store('public');
+        $nombreImagen = basename($path);
+        $publicacion->imagen = $nombreImagen;
+        $publicacion->titulo = $request->titulo;
+        $publicacion->posteo = $request->posteo;
         $publicacion->save();
+
+        return redirect('inicio');
     }
 
     /**
@@ -106,6 +127,6 @@ class PublicacionController extends Controller
     public function destroy($id)
     {
         Publicacion::destroy($id);
-        return view('inicio');
+        return redirect('inicio');
     }
 }
