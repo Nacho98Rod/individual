@@ -61,7 +61,7 @@ class PublicacionController extends Controller
         $publicacion->save();
         }
 
-        return redirect('/inicio');
+        return redirect('inicio');
     }
 
     /**
@@ -116,18 +116,13 @@ class PublicacionController extends Controller
         $this->validate($request, $reglas, $mensajes);
 
         $publicacion = Publicacion::findOrFail($request->id);
-        if($request->file('imagen') == null){
-            $publicacion->titulo = $request->titulo;
-            $publicacion->posteo = $request->posteo;
-            $publicacion->save();
-        }else{
         $path = $request->file('imagen')->store('public');
         $nombreImagen = basename($path);
         $publicacion->imagen = $nombreImagen;
         $publicacion->titulo = $request->titulo;
         $publicacion->posteo = $request->posteo;
         $publicacion->save();
-        }
+        
 
         return redirect('inicio');
     }
